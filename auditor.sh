@@ -49,12 +49,7 @@ function init() {
   [[ ! -d "$LOGS_FOLDER" ]] && { mkdir $LOGS_FOLDER; }
   [[ ! -d "$STATS_FOLDER" ]] && { mkdir $STATS_FOLDER; }
 
-  CLUSTER_DOMAIN="$(
-    oc cluster-info | \
-      head -1 | \
-      sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" | \
-      sed 's/^.*https:\/\/api.\(.*\):[0-9]*/\1/'\
-      )"
+  CLUSTER_DOMAIN="$(oc get dnses.config.openshift.io -o jsonpath='{.items[*].spec.baseDomain}')"
 
   STATS_FOLDER=$STATS_FOLDER/$CLUSTER_DOMAIN
   [[ ! -d "$STATS_FOLDER" ]] && { mkdir $STATS_FOLDER; }
